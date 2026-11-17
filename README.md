@@ -532,7 +532,7 @@ vshell-cli diagnose
 
 检查 VShell 面板（含登录）、curl 是否可用，并显示自身版本。
 不需要登录；登录失败会记录在报告里，不会中断。
-JSON：`{"vshell_ok":true,"dashboard":{...},"curl_ok":true,"curl_version":"...","cli_version":"0.1.0"}`。
+JSON：`{"vshell_ok":true,"dashboard":{...},"curl_ok":true,"curl_version":"...","cli_version":"0.1.1"}`。
 
 ### 23. help — 帮助
 
@@ -574,7 +574,7 @@ go test ./...
 本地构建全部平台的压缩包与校验和：
 
 ```bash
-./scripts/build-release.sh 0.1.0
+./scripts/build-release.sh 0.1.1
 ```
 
 产物在 `dist/`，包含 Linux（amd64 / arm64 / 386）、macOS（amd64 / arm64）、
@@ -583,8 +583,8 @@ Windows（amd64 / arm64 / 386）、FreeBSD（amd64）压缩包与 `SHA256SUMS.tx
 推送 `v*` 标签会触发 GitHub Actions，自动完成同样的构建并创建 Release：
 
 ```bash
-git tag v0.1.0
-git push origin v0.1.0
+git tag v0.1.1
+git push origin v0.1.1
 ```
 
 ## 安全提示
