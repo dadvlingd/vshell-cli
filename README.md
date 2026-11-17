@@ -11,7 +11,7 @@
 
 # vshell-cli
 
-VShell C2 的命令行客户端。用账号密码登录换取 JWT，所有操作通过子命令完成，不落盘保存凭据。
+VShell C2 的命令行客户端。用账号密码登录换取 JWT，所有操作通过子命令完成。
 
 > 仅用于自有资产、隔离靶场或已获书面授权范围内的测试。
 
@@ -27,6 +27,29 @@ VShell C2 的命令行客户端。用账号密码登录换取 JWT，所有操作
 | FreeBSD | amd64 | `vshell-cli_<版本>_freebsd_amd64.tar.gz` |
 
 校验下载文件：`shasum -a 256 -c SHA256SUMS`（Linux 用 `sha256sum -c SHA256SUMS`）。
+
+## 配置
+
+首次不带参数运行会在当前目录创建 `config.ini`（Unix 下权限 0600），同时显示命令列表：
+
+```bash
+./vshell-cli
+```
+
+编辑该文件：
+
+```ini
+[vshell]
+url = http://127.0.0.1:8082
+username = admin
+password = <密码>
+```
+
+之后运行任意命令都会自动读取。可用 `--config <文件>` 或 `VSHELL_CONFIG` 指定其他路径。
+
+优先级：命令行参数 > 环境变量 > `config.ini` > 交互输入密码。密码留空时，运行时再输入。
+
+> `config.ini` 中的密码是明文，建议 `chmod 600 config.ini`，并确保不提交到版本库。
 
 ## 命令总览
 
@@ -71,7 +94,7 @@ go install .
 
 ## 认证
 
-三种传入方式，优先级：命令行 > 环境变量 > 交互输入。
+凭据来源优先级：命令行参数 > 环境变量 > `config.ini` > 交互输入。
 
 ```bash
 export VSHELL_URL=http://127.0.0.1:8082
@@ -83,7 +106,7 @@ export VSHELL_PASS='<密码>'
 ./vshell-cli --url http://127.0.0.1:8082 --user admin --password '<密码>' info
 ```
 
-不传 `--password` 且没有 `VSHELL_PASS` 时，会交互读取密码（终端下关闭回显）。
+也可以写入 `config.ini`（见上一节）。`--password`、`VSHELL_PASS` 和配置文件都没有密码时，会交互读取密码（终端下关闭回显）。
 每次执行都会重新登录，JWT 只存在于本次进程内存中。
 
 ## 使用约定
@@ -101,6 +124,7 @@ export VSHELL_PASS='<密码>'
 | `--url <地址>` | VShell 面板地址（`VSHELL_URL`） |
 | `--user <用户名>` | 登录用户名（`VSHELL_USER`），别名 `--username` |
 | `--password <密码>` | 登录密码（`VSHELL_PASS`），别名 `--pass` |
+| `--config <文件>` | 配置文件路径（`VSHELL_CONFIG`），默认 `./config.ini` |
 | `--http-timeout <秒>` | API 请求默认超时，默认 60 |
 | `--json` | 结构化 JSON 输出 |
 | `--insecure` | 跳过 TLS 证书校验 |
@@ -565,6 +589,8 @@ git push origin v0.1.0
 
 ## 安全提示
 
-- 优先用 `VSHELL_PASS` 或交互输入；`--password` 会出现在 shell 历史与进程列表中。
-- 凭据只存在于进程内存，不写入配置文件。
+- `config.ini` 中的密码是明文，建议 `chmod 600 config.ini`，并确保不提交到版本库。
+- 不需要保存密码时，把 `password` 留空，运行时交互输入。
+- `--password` 会出现在 shell 历史与进程列表中；优先用配置文件或 `VSHELL_PASS`。
+- JWT 只存在于进程内存，不写入磁盘。
 - 本工具没有审计日志和命令白名单；接入真实环境时建议在隔离终端中使用，并自行保留操作记录。

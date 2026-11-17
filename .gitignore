@@ -1,5 +1,6 @@
 /vshell-cli
 /vshell-cli.exe
+/config.ini
 /dist/
 .DS_Store
 *.test

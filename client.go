@@ -178,7 +178,7 @@ func NewClient(cfg *Config) *Client {
 // Login 用账号密码换取 JWT，并生成双认证头所需的 Basic 值。
 func (c *Client) Login() error {
 	if c.User == "" {
-		return errors.New("缺少用户名（--user 或 VSHELL_USER）")
+		return errors.New("缺少用户名（--user、VSHELL_USER 或 config.ini 的 [vshell] username）")
 	}
 	body := map[string]string{"username": c.User, "password": c.Pass}
 	var resp Response

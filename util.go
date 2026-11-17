@@ -72,7 +72,7 @@ func promptPassword() (string, error) {
 	}
 	p := strings.TrimRight(line, "\r\n")
 	if p == "" {
-		return "", fmt.Errorf("密码为空（可用 --password 或 VSHELL_PASS）")
+		return "", fmt.Errorf("密码为空（可用 --password、VSHELL_PASS 或 config.ini 的 [vshell] password）")
 	}
 	return p, nil
 }

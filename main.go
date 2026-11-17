@@ -22,6 +22,7 @@ type Config struct {
 	URL         string
 	User        string
 	Pass        string
+	ConfigFile  string
 	JSON        bool
 	Insecure    bool
 	HTTPTimeout time.Duration
@@ -46,8 +47,12 @@ func main() {
 		fmt.Println("vshell-cli", version)
 		return
 	}
-	if cfg.Help || len(rest) == 0 {
+	if cfg.Help {
 		printHelp()
+		return
+	}
+	if len(rest) == 0 {
+		runSetup(cfg)
 		return
 	}
 	cmdName, args := rest[0], rest[1:]
@@ -58,12 +63,32 @@ func main() {
 	if !knownCommand(cmdName) {
 		usageErr(fmt.Errorf("未知命令: %s", cmdName))
 	}
+
+	exists, err := applyConfigFile(cfg)
+	if err != nil {
+		fail(fmt.Errorf("读取 %s: %w", displayPath(cfg.ConfigFile), err))
+	}
+	if exists {
+		warnConfigPermissions(cfg.ConfigFile)
+	}
+	if commandNeedsAuth(cmdName) && !exists && cfg.URL == "" && cfg.User == "" && cfg.Pass == "" {
+		created, cerr := ensureConfigTemplate(cfg.ConfigFile)
+		if cerr != nil {
+			fail(fmt.Errorf("创建 %s: %w", displayPath(cfg.ConfigFile), cerr))
+		}
+		if created {
+			printHelp()
+			printConfigSetup(os.Stderr, cfg.ConfigFile)
+			os.Exit(2)
+		}
+	}
+
 	if cfg.URL == "" && cmdName != "send" && cmdName != "compare" {
-		usageErr(errors.New("缺少 VShell 地址（--url 或环境变量 VSHELL_URL）"))
+		usageErr(errors.New("缺少 VShell 地址（--url、VSHELL_URL 或 config.ini 的 [vshell] url）"))
 	}
 	if commandNeedsAuth(cmdName) {
 		if cfg.User == "" {
-			usageErr(errors.New("缺少用户名（--user 或环境变量 VSHELL_USER）"))
+			usageErr(errors.New("缺少用户名（--user、VSHELL_USER 或 config.ini 的 [vshell] username）"))
 		}
 		if cfg.Pass == "" {
 			p, err := promptPassword()
@@ -126,6 +151,27 @@ func main() {
 	}
 }
 
+// runSetup 用于不带命令的首次运行：创建配置模板、显示命令列表和当前配置。
+func runSetup(cfg *Config) {
+	exists, err := applyConfigFile(cfg)
+	if err != nil {
+		fail(fmt.Errorf("读取 %s: %w", displayPath(cfg.ConfigFile), err))
+	}
+	created := false
+	var createErr error
+	if !exists {
+		created, createErr = ensureConfigTemplate(cfg.ConfigFile)
+		if createErr == nil && created {
+			exists = true
+		}
+	}
+	if exists {
+		warnConfigPermissions(cfg.ConfigFile)
+	}
+	printHelp()
+	printConfigSummary(cfg, exists, created, createErr)
+}
+
 func knownCommand(cmd string) bool {
 	switch cmd {
 	case "info", "clients", "exec", "exec-async", "shell", "disks", "ls", "cat",
@@ -151,6 +197,7 @@ func parseGlobals(args []string) (*Config, []string, error) {
 		URL:         os.Getenv("VSHELL_URL"),
 		User:        os.Getenv("VSHELL_USER"),
 		Pass:        os.Getenv("VSHELL_PASS"),
+		ConfigFile:  os.Getenv("VSHELL_CONFIG"),
 		HTTPTimeout: 60 * time.Second,
 	}
 
@@ -190,6 +237,12 @@ func parseGlobals(args []string) (*Config, []string, error) {
 				return nil, nil, err
 			}
 			cfg.Pass = v
+		case "--config":
+			v, err := take()
+			if err != nil {
+				return nil, nil, err
+			}
+			cfg.ConfigFile = v
 		case "--http-timeout":
 			v, err := take()
 			if err != nil {
@@ -211,6 +264,9 @@ func parseGlobals(args []string) (*Config, []string, error) {
 		default:
 			return nil, nil, fmt.Errorf("未知全局参数: %s（全局参数需放在命令之前）", a)
 		}
+	}
+	if cfg.ConfigFile == "" {
+		cfg.ConfigFile = defaultConfigFile
 	}
 	return cfg, args[i:], nil
 }
@@ -1189,7 +1245,8 @@ func printHelp() {
 全局参数（必须写在命令之前）:
   --url <地址>            VShell 面板地址（或 VSHELL_URL）
   --user <用户名>         登录用户名（或 VSHELL_USER）
-  --password <密码>       登录密码（或 VSHELL_PASS；不传则交互输入）
+  --password <密码>       登录密码（或 VSHELL_PASS / config.ini）
+  --config <文件>         配置文件路径（或 VSHELL_CONFIG，默认 ./config.ini）
   --http-timeout <秒>     API 请求默认超时（默认 60）
   --json                  以 JSON 输出
   --insecure              跳过 TLS 证书校验
@@ -1231,9 +1288,8 @@ func printHelp() {
   diagnose                          诊断面板、curl
 
 示例:
-  export VSHELL_URL=http://127.0.0.1:8082
-  export VSHELL_USER=admin
-  export VSHELL_PASS='<密码>'
+  vshell-cli
+  vshell-cli info
   vshell-cli clients
   vshell-cli exec 3 "whoami & ipconfig"
   vshell-cli ls 3 C:/
@@ -1241,7 +1297,10 @@ func printHelp() {
   vshell-cli --json info
 
 说明:
-  - 每次执行都会用账号密码重新登录获取 JWT，不在本地保存凭据。
+  - 首次运行（不带命令）会在当前目录创建 config.ini，并显示命令列表。
+  - 字段优先级：命令行参数 > 环境变量 > config.ini；密码留空时交互输入。
+  - config.ini 中的密码为明文，建议 chmod 600，并避免提交到版本库。
+  - 每次执行都会重新登录，JWT 只在本次进程内存中。
   - Agent 掉线时只报告错误，不会自动切换 ID 执行。
 `, version)
 }
