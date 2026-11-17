@@ -1,0 +1,5 @@
+/vshell-cli
+/vshell-cli.exe
+/dist/
+.DS_Store
+*.test
