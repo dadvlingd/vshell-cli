@@ -3,8 +3,8 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/yudaysec/vshell-cli/releases"><img alt="Release" src="https://img.shields.io/github/v/release/yudaysec/vshell-cli?color=2ea043"></a>
-  <a href="https://github.com/yudaysec/vshell-cli/actions/workflows/release.yml"><img alt="Release workflow" src="https://github.com/yudaysec/vshell-cli/actions/workflows/release.yml/badge.svg"></a>
+  <a href="https://github.com/dadvlingd/vshell-cli/releases"><img alt="Release" src="https://img.shields.io/github/v/release/dadvlingd/vshell-cli?color=2ea043"></a>
+  <a href="https://github.com/dadvlingd/vshell-cli/actions/workflows/release.yml"><img alt="Release workflow" src="https://github.com/dadvlingd/vshell-cli/actions/workflows/release.yml/badge.svg"></a>
   <img alt="Platforms" src="https://img.shields.io/badge/platforms-Linux%20%7C%20macOS%20%7C%20Windows%20%7C%20FreeBSD-22b8cf">
   <img alt="Go" src="https://img.shields.io/badge/Go-1.26%2B-00ADD8?logo=go&logoColor=white">
 </p>
@@ -17,7 +17,7 @@ VShell C2 的命令行客户端。用账号密码登录换取 JWT，所有操作
 
 ## 安装
 
-从 [Releases](https://github.com/yudaysec/vshell-cli/releases/latest) 下载对应平台的压缩包，解压后把 `vshell-cli` 放进 `PATH`。
+从 [Releases](https://github.com/dadvlingd/vshell-cli/releases/latest) 下载对应平台的压缩包，解压后把 `vshell-cli` 放进 `PATH`。
 
 | 平台 | 架构 | 文件 |
 |---|---|---|
