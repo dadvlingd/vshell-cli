@@ -6,7 +6,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
-VERSION="${1:-$(git describe --tags --always 2>/dev/null || echo 0.1.1)}"
+VERSION="${1:-$(git describe --tags --always 2>/dev/null || echo 0.2.0)}"
 VERSION="${VERSION#v}"
 OUT="$ROOT/dist"
 

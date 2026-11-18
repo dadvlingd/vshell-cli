@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" viewBox="0 0 1200 600" role="img" aria-label="vshell-cli 架构">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1220"/>
+      <stop offset="1" stop-color="#111c33"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#3ddc84"/>
+      <stop offset="1" stop-color="#22b8cf"/>
+    </linearGradient>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#ffffff" stroke-opacity="0.035"/>
+    </pattern>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#3ddc84"/>
+    </marker>
+    <marker id="arrowCyan" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#22b8cf"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="600" rx="24" fill="url(#bg)"/>
+  <rect width="1200" height="600" rx="24" fill="url(#grid)"/>
+
+  <text x="64" y="66" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-size="30" font-weight="700" fill="#f8fafc">vshell-cli 工作方式</text>
+  <text x="64" y="98" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-size="15" fill="#8fa3bf">同一份 config.ini，既可以命令行使用，也可以作为 MCP 服务被客户端调用</text>
+  <rect x="64" y="112" width="96" height="4" rx="2" fill="url(#accent)"/>
+
+  <!-- MCP client -->
+  <rect x="64" y="150" width="300" height="250" rx="14" fill="#0d1526" stroke="#22304c"/>
+  <text x="88" y="190" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-size="17" font-weight="600" fill="#e2e8f0">MCP 客户端</text>
+  <text x="88" y="218" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-size="13" fill="#7d8ca6">Claude Desktop / IDE / Agent</text>
+  <g font-family="'SF Mono',Menlo,Consolas,monospace" font-size="13">
+    <text x="88" y="262" fill="#7dd3fc">initialize</text>
+    <text x="88" y="290" fill="#7dd3fc">tools/list</text>
+    <text x="88" y="318" fill="#7dd3fc">tools/call</text>
+  </g>
+  <rect x="88" y="344" width="152" height="30" rx="15" fill="#14213a" stroke="#243554"/>
+  <text x="164" y="364" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,monospace" font-size="12" fill="#8ee6b0">JSON-RPC 2.0</text>
+
+  <!-- vshell-cli -->
+  <rect x="450" y="150" width="300" height="250" rx="14" fill="#0d1526" stroke="#2b4a63"/>
+  <text x="474" y="190" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-size="17" font-weight="600" fill="#e2e8f0">vshell-cli</text>
+  <g font-family="'SF Mono',Menlo,Consolas,monospace" font-size="12">
+    <rect x="474" y="206" width="82" height="28" rx="6" fill="#14213a" stroke="#2b4a63"/>
+    <text x="515" y="225" text-anchor="middle" fill="#8ee6b0">CLI 命令</text>
+    <rect x="566" y="206" width="104" height="28" rx="6" fill="#14213a" stroke="#2b4a63"/>
+    <text x="618" y="225" text-anchor="middle" fill="#8ee6b0">MCP stdio</text>
+  </g>
+  <g font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-size="13">
+    <text x="474" y="268" fill="#94a3b8">config.ini · 0600</text>
+    <text x="474" y="294" fill="#94a3b8">JWT 只保存在进程内存</text>
+    <text x="474" y="320" fill="#94a3b8">直接复用同一套 API 客户端</text>
+  </g>
+  <rect x="474" y="344" width="180" height="30" rx="15" fill="#14213a" stroke="#243554"/>
+  <text x="564" y="364" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,monospace" font-size="12" fill="#7dd3fc">Go · 单文件二进制</text>
+
+  <!-- panel -->
+  <rect x="836" y="150" width="300" height="250" rx="14" fill="#0d1526" stroke="#22304c"/>
+  <text x="860" y="190" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-size="17" font-weight="600" fill="#e2e8f0">VShell C2 面板</text>
+  <text x="860" y="218" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-size="13" fill="#7d8ca6">HTTPS API · JWT</text>
+  <g font-family="'SF Mono',Menlo,Consolas,monospace" font-size="13">
+    <text x="860" y="262" fill="#7dd3fc">/api/login</text>
+    <text x="860" y="290" fill="#7dd3fc">/api/client/list</text>
+    <text x="860" y="318" fill="#7dd3fc">/api/file/*</text>
+    <text x="860" y="346" fill="#7dd3fc">/api/terminal/*</text>
+  </g>
+
+  <!-- agents -->
+  <rect x="836" y="450" width="300" height="80" rx="12" fill="#0d1526" stroke="#22304c"/>
+  <text x="860" y="482" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-size="15" font-weight="600" fill="#e2e8f0">Agents</text>
+  <text x="860" y="508" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-size="12" fill="#7d8ca6">Linux / Windows / macOS</text>
+
+  <!-- arrows -->
+  <line x1="364" y1="275" x2="442" y2="275" stroke="#3ddc84" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="403" y="255" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,monospace" font-size="11" fill="#8ee6b0">JSON-RPC</text>
+  <text x="403" y="294" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,monospace" font-size="11" fill="#7d8ca6">stdio</text>
+
+  <line x1="750" y1="275" x2="828" y2="275" stroke="#22b8cf" stroke-width="2" marker-end="url(#arrowCyan)"/>
+  <text x="789" y="255" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,monospace" font-size="11" fill="#7dd3fc">HTTPS</text>
+  <text x="789" y="294" text-anchor="middle" font-family="'SF Mono',Menlo,Consolas,monospace" font-size="11" fill="#7d8ca6">JWT</text>
+
+  <line x1="986" y1="400" x2="986" y2="442" stroke="#3ddc84" stroke-width="2" stroke-dasharray="5 5" marker-end="url(#arrow)"/>
+  <text x="1000" y="428" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-size="11" fill="#8ee6b0">反向连接</text>
+
+  <text x="64" y="574" font-family="'SF Mono',Menlo,Consolas,monospace" font-size="12" fill="#5b6b86">凭据优先级：命令行参数 &gt; 环境变量 &gt; config.ini &gt; 交互输入</text>
+</svg>

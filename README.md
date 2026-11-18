@@ -7,13 +7,18 @@
   <a href="https://github.com/dadvlingd/vshell-cli/actions/workflows/release.yml"><img alt="Release workflow" src="https://github.com/dadvlingd/vshell-cli/actions/workflows/release.yml/badge.svg"></a>
   <img alt="Platforms" src="https://img.shields.io/badge/platforms-Linux%20%7C%20macOS%20%7C%20Windows%20%7C%20FreeBSD-22b8cf">
   <img alt="Go" src="https://img.shields.io/badge/Go-1.26%2B-00ADD8?logo=go&logoColor=white">
+  <img alt="MCP" src="https://img.shields.io/badge/MCP-stdio-2ea043">
 </p>
 
 # vshell-cli
 
-VShell C2 的命令行客户端。用账号密码登录换取 JWT，所有操作通过子命令完成。
+VShell C2 的命令行客户端。用账号密码登录换取 JWT，所有操作通过子命令完成。也可以 `vshell-cli mcp` 启动 MCP stdio 服务，把同样的能力交给 Claude Desktop 等 MCP 客户端。
 
 > 仅用于自有资产、隔离靶场或已获书面授权范围内的测试。
+
+<p align="center">
+  <img src="docs/architecture.png" alt="vshell-cli 工作方式：MCP 客户端、vshell-cli 与 VShell C2 面板" width="880">
+</p>
 
 ## 安装
 
@@ -35,6 +40,10 @@ VShell C2 的命令行客户端。用账号密码登录换取 JWT，所有操作
 ```bash
 ./vshell-cli
 ```
+
+<p align="center">
+  <img src="docs/quickstart.png" alt="vshell-cli 首次运行、编辑 config.ini 并执行 info" width="880">
+</p>
 
 编辑该文件：
 
@@ -533,13 +542,17 @@ vshell-cli diagnose
 
 检查 VShell 面板（含登录）、curl 是否可用，并显示自身版本。
 不需要登录；登录失败会记录在报告里，不会中断。
-JSON：`{"vshell_ok":true,"dashboard":{...},"curl_ok":true,"curl_version":"...","cli_version":"0.1.1"}`。
+JSON：`{"vshell_ok":true,"dashboard":{...},"curl_ok":true,"curl_version":"...","cli_version":"0.2.0"}`。
 
 ### 23. mcp — MCP stdio 服务
 
 ```bash
 vshell-cli mcp [--print-config]
 ```
+
+<p align="center">
+  <img src="docs/mcp.png" alt="vshell-cli mcp 启动输出与 17 个 MCP 工具" width="880">
+</p>
 
 读取 `config.ini`，通过 stdio 提供 MCP JSON-RPC 服务，供 Claude Desktop 等客户端调用。
 启动时把 MCP 配置片段打印到 stderr，stdout 只用于协议，避免污染；`--print-config` 只把片段打印到 stdout 后退出。
@@ -612,7 +625,7 @@ go test ./...
 本地构建全部平台的压缩包与校验和：
 
 ```bash
-./scripts/build-release.sh 0.1.1
+./scripts/build-release.sh 0.2.0
 ```
 
 产物在 `dist/`，包含 Linux（amd64 / arm64 / 386）、macOS（amd64 / arm64）、
@@ -621,8 +634,8 @@ Windows（amd64 / arm64 / 386）、FreeBSD（amd64）压缩包与 `SHA256SUMS.tx
 推送 `v*` 标签会触发 GitHub Actions，自动完成同样的构建并创建 Release：
 
 ```bash
-git tag v0.1.1
-git push origin v0.1.1
+git tag v0.2.0
+git push origin v0.2.0
 ```
 
 ## 安全提示

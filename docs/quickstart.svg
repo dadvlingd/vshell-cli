@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="640" viewBox="0 0 1200 640" role="img" aria-label="vshell-cli 首次运行与配置">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1220"/>
+      <stop offset="1" stop-color="#111c33"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#3ddc84"/>
+      <stop offset="1" stop-color="#22b8cf"/>
+    </linearGradient>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#ffffff" stroke-opacity="0.035"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="640" rx="24" fill="url(#bg)"/>
+  <rect width="1200" height="640" rx="24" fill="url(#grid)"/>
+
+  <text x="64" y="66" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-size="30" font-weight="700" fill="#f8fafc">从首次运行到第一条命令</text>
+  <text x="64" y="98" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-size="15" fill="#8fa3bf">第一次运行生成 config.ini，填好地址和账号后，后续命令自动读取</text>
+  <rect x="64" y="112" width="96" height="4" rx="2" fill="url(#accent)"/>
+
+  <rect x="80" y="140" width="1040" height="452" rx="14" fill="#080d18" stroke="#22304c"/>
+  <rect x="80" y="140" width="1040" height="34" rx="14" fill="#0d1526"/>
+  <rect x="80" y="160" width="1040" height="14" fill="#0d1526"/>
+  <circle cx="102" cy="157" r="5" fill="#ff5f57"/>
+  <circle cx="120" cy="157" r="5" fill="#febc2e"/>
+  <circle cx="138" cy="157" r="5" fill="#28c840"/>
+  <text x="1094" y="162" text-anchor="end" font-family="'SF Mono',Menlo,Consolas,monospace" font-size="11" fill="#5b6b86">zsh</text>
+
+  <g font-family="'SF Mono',Menlo,Consolas,monospace" font-size="14">
+    <text x="108" y="206" fill="#5b6b86">$</text>
+    <text x="130" y="206" fill="#e2e8f0">vshell-cli</text>
+    <text x="108" y="234" fill="#8ee6b0">未找到配置文件，已创建模板:</text>
+    <text x="130" y="260" fill="#7dd3fc">/Users/you/vshell-cli/config.ini</text>
+    <text x="108" y="288" fill="#94a3b8">请填写 [vshell] 下的 url、username、password</text>
+    <text x="108" y="316" fill="#5b6b86">chmod 600 config.ini</text>
+
+    <text x="108" y="356" fill="#5b6b86">$</text>
+    <text x="130" y="356" fill="#e2e8f0">vi config.ini</text>
+    <text x="130" y="384" fill="#8fa3bf">[vshell]</text>
+    <text x="130" y="410" fill="#8fa3bf">url = http://127.0.0.1:8082</text>
+    <text x="130" y="436" fill="#8fa3bf">username = admin</text>
+    <text x="130" y="462" fill="#8fa3bf">password = ********</text>
+
+    <text x="108" y="502" fill="#5b6b86">$</text>
+    <text x="130" y="502" fill="#e2e8f0">vshell-cli info</text>
+    <text x="108" y="530" fill="#8ee6b0">VShell C2 运行中</text>
+    <text x="130" y="556" fill="#94a3b8">URL: http://127.0.0.1:8082</text>
+    <text x="130" y="582" fill="#94a3b8">在线 Agent: 12    监听器: 3/3 在线</text>
+  </g>
+
+  <text x="64" y="622" font-family="'SF Mono',Menlo,Consolas,monospace" font-size="12" fill="#5b6b86">首次运行只创建模板，不会发起网络请求；密码也可以留空，运行时交互输入</text>
+</svg>

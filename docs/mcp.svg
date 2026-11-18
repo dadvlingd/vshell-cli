@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="640" viewBox="0 0 1200 640" role="img" aria-label="vshell-cli MCP 配置与工具">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1220"/>
+      <stop offset="1" stop-color="#111c33"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#3ddc84"/>
+      <stop offset="1" stop-color="#22b8cf"/>
+    </linearGradient>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#ffffff" stroke-opacity="0.035"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="640" rx="24" fill="url(#bg)"/>
+  <rect width="1200" height="640" rx="24" fill="url(#grid)"/>
+
+  <text x="64" y="66" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-size="30" font-weight="700" fill="#f8fafc">一条命令接入 MCP 客户端</text>
+  <text x="64" y="98" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-size="15" fill="#8fa3bf">vshell-cli mcp 启动 stdio 服务，并把可粘贴的 mcpServers 配置打印到 stderr</text>
+  <rect x="64" y="112" width="96" height="4" rx="2" fill="url(#accent)"/>
+
+  <!-- terminal -->
+  <rect x="64" y="140" width="520" height="420" rx="14" fill="#080d18" stroke="#22304c"/>
+  <rect x="64" y="140" width="520" height="34" rx="14" fill="#0d1526"/>
+  <rect x="64" y="160" width="520" height="14" fill="#0d1526"/>
+  <circle cx="86" cy="157" r="5" fill="#ff5f57"/>
+  <circle cx="104" cy="157" r="5" fill="#febc2e"/>
+  <circle cx="122" cy="157" r="5" fill="#28c840"/>
+  <text x="560" y="162" text-anchor="end" font-family="'SF Mono',Menlo,Consolas,monospace" font-size="11" fill="#5b6b86">zsh</text>
+
+  <g font-family="'SF Mono',Menlo,Consolas,monospace" font-size="12">
+    <text x="86" y="206" fill="#5b6b86">$</text>
+    <text x="102" y="206" fill="#e2e8f0">vshell-cli mcp</text>
+    <text x="86" y="232" fill="#8ee6b0">MCP 配置信息（放入 mcpServers）:</text>
+    <text x="86" y="258" fill="#7dd3fc">{</text>
+    <text x="86" y="282" fill="#7dd3fc">  "mcpServers": {</text>
+    <text x="86" y="306" fill="#7dd3fc">    "vshell-cli": {</text>
+    <text x="86" y="330" fill="#94a3b8">      "command": "/usr/local/bin/vshell-cli",</text>
+    <text x="86" y="354" fill="#94a3b8">      "args": ["--config", "/Users/you/config.ini", "mcp"]</text>
+    <text x="86" y="378" fill="#7dd3fc">    }</text>
+    <text x="86" y="402" fill="#7dd3fc">  }</text>
+    <text x="86" y="426" fill="#7dd3fc">}</text>
+    <text x="86" y="458" fill="#8ee6b0">MCP stdio 服务已启动，等待请求...</text>
+  </g>
+  <rect x="86" y="478" width="9" height="16" fill="#3ddc84"/>
+  <text x="108" y="492" fill="#5b6b86" font-family="'SF Mono',Menlo,Consolas,monospace" font-size="11">stdout 只输出 JSON-RPC</text>
+
+  <!-- tools -->
+  <rect x="620" y="140" width="516" height="420" rx="14" fill="#0d1526" stroke="#2b4a63"/>
+  <text x="646" y="180" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-size="17" font-weight="600" fill="#e2e8f0">MCP 工具（17）</text>
+
+  <g font-family="'SF Mono',Menlo,Consolas,monospace" font-size="13">
+    <text x="646" y="218" fill="#8ee6b0">面板</text>
+    <text x="722" y="218" fill="#cbd5e1">vshell_info</text>
+    <text x="842" y="218" fill="#cbd5e1">vshell_clients</text>
+
+    <text x="646" y="252" fill="#8ee6b0">命令</text>
+    <text x="722" y="252" fill="#cbd5e1">vshell_exec</text>
+    <text x="842" y="252" fill="#cbd5e1">vshell_exec_async</text>
+
+    <text x="646" y="286" fill="#8ee6b0">文件</text>
+    <text x="722" y="286" fill="#cbd5e1">vshell_disks</text>
+    <text x="842" y="286" fill="#cbd5e1">vshell_ls</text>
+    <text x="722" y="312" fill="#cbd5e1">vshell_cat</text>
+    <text x="842" y="312" fill="#cbd5e1">vshell_write</text>
+    <text x="722" y="338" fill="#cbd5e1">vshell_rm</text>
+
+    <text x="646" y="372" fill="#8ee6b0">传输</text>
+    <text x="722" y="372" fill="#cbd5e1">vshell_upload</text>
+    <text x="842" y="372" fill="#cbd5e1">vshell_download</text>
+
+    <text x="646" y="412" fill="#8ee6b0">隧道</text>
+    <text x="722" y="412" fill="#cbd5e1">vshell_socks_start</text>
+    <text x="722" y="438" fill="#cbd5e1">vshell_socks_stop</text>
+    <text x="722" y="464" fill="#cbd5e1">vshell_socks_list</text>
+
+    <text x="646" y="498" fill="#8ee6b0">其他</text>
+    <text x="722" y="498" fill="#cbd5e1">vshell_listeners</text>
+    <text x="866" y="498" fill="#cbd5e1">vshell_runners</text>
+    <text x="722" y="524" fill="#cbd5e1">vshell_diagnose</text>
+  </g>
+
+  <text x="64" y="602" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-size="13" fill="#8fa3bf">兼容换行分隔 JSON 与 Content-Length 帧；工具调用失败以 isError 返回，不污染 stdout</text>
+  <text x="1136" y="602" text-anchor="end" font-family="'SF Mono',Menlo,Consolas,monospace" font-size="12" fill="#5b6b86">JSON-RPC 2.0 · stdio</text>
+</svg>
