@@ -45,7 +45,7 @@ username = admin
 password = <密码>
 ```
 
-之后运行任意命令都会自动读取。可用 `--config <文件>` 或 `VSHELL_CONFIG` 指定其他路径。
+之后运行任意命令都会自动读取。可用 `--config <文件>` 或 `VSHELL_CONFIG` 指定其他路径。`mcp` 生成的配置片段使用绝对路径，客户端从任意工作目录启动都能读取同一份配置。
 
 优先级：命令行参数 > 环境变量 > `config.ini` > 交互输入密码。密码留空时，运行时再输入。
 
@@ -79,6 +79,7 @@ password = <密码>
 | `send` | 单引擎发包（direct / curl） |
 | `compare` | direct 与 curl 并行对比发包 |
 | `diagnose` | 面板、登录、curl 诊断 |
+| `mcp` | 启动 MCP stdio 服务 |
 | `help` | 帮助 |
 
 ## 构建
@@ -534,7 +535,44 @@ vshell-cli diagnose
 不需要登录；登录失败会记录在报告里，不会中断。
 JSON：`{"vshell_ok":true,"dashboard":{...},"curl_ok":true,"curl_version":"...","cli_version":"0.1.1"}`。
 
-### 23. help — 帮助
+### 23. mcp — MCP stdio 服务
+
+```bash
+vshell-cli mcp [--print-config]
+```
+
+读取 `config.ini`，通过 stdio 提供 MCP JSON-RPC 服务，供 Claude Desktop 等客户端调用。
+启动时把 MCP 配置片段打印到 stderr，stdout 只用于协议，避免污染；`--print-config` 只把片段打印到 stdout 后退出。
+
+生成的配置形如：
+
+```json
+{
+  "mcpServers": {
+    "vshell-cli": {
+      "command": "/path/to/vshell-cli",
+      "args": ["--config", "/path/to/config.ini", "mcp"]
+    }
+  }
+}
+```
+
+工具：
+
+```text
+vshell_info          vshell_clients       vshell_exec
+vshell_exec_async    vshell_disks         vshell_ls
+vshell_cat           vshell_write         vshell_rm
+vshell_upload        vshell_download      vshell_listeners
+vshell_runners       vshell_socks_start   vshell_socks_stop
+vshell_socks_list    vshell_diagnose
+```
+
+`mcp` 要求 `config.ini` 已填写 `url`、`username`、`password`。stdio 模式下无法交互输入密码，不能省略密码。
+
+`vshell_write` 和 `vshell_upload` 可以读取 MCP 服务所在机器的本地文件并发往 Agent，请只接入可信客户端。
+
+### 24. help — 帮助
 
 ```bash
 vshell-cli help
@@ -592,5 +630,6 @@ git push origin v0.1.1
 - `config.ini` 中的密码是明文，建议 `chmod 600 config.ini`，并确保不提交到版本库。
 - 不需要保存密码时，把 `password` 留空，运行时交互输入。
 - `--password` 会出现在 shell 历史与进程列表中；优先用配置文件或 `VSHELL_PASS`。
+- `mcp` 的 `vshell_write` / `vshell_upload` 可读取本机文件并发往 Agent，只接入可信的 MCP 客户端。
 - JWT 只存在于进程内存，不写入磁盘。
 - 本工具没有审计日志和命令白名单；接入真实环境时建议在隔离终端中使用，并自行保留操作记录。

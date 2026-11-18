@@ -82,6 +82,18 @@ func main() {
 			os.Exit(2)
 		}
 	}
+	if cmdName == "mcp" && !exists {
+		usageErr(errors.New("mcp 需要 config.ini：请先直接运行 vshell-cli 生成并填写配置"))
+	}
+	if cmdName == "mcp" {
+		fc, _, err := readConfigFile(cfg.ConfigFile)
+		if err != nil {
+			fail(fmt.Errorf("读取 %s: %w", displayPath(cfg.ConfigFile), err))
+		}
+		if fc.URL == "" || fc.User == "" || fc.Pass == "" {
+			usageErr(errors.New("mcp 需要 config.ini 中完整填写 url、username、password（配置片段只引用该文件）"))
+		}
+	}
 
 	if cfg.URL == "" && cmdName != "send" && cmdName != "compare" {
 		usageErr(errors.New("缺少 VShell 地址（--url、VSHELL_URL 或 config.ini 的 [vshell] url）"))
@@ -91,6 +103,9 @@ func main() {
 			usageErr(errors.New("缺少用户名（--user、VSHELL_USER 或 config.ini 的 [vshell] username）"))
 		}
 		if cfg.Pass == "" {
+			if cmdName == "mcp" {
+				usageErr(errors.New("mcp 需要配置文件中的 password（stdio 模式无法交互输入）"))
+			}
 			p, err := promptPassword()
 			if err != nil {
 				fail(err)
@@ -141,6 +156,8 @@ func main() {
 		runErr = cmdCompare(cfg, c, args)
 	case "diagnose":
 		runErr = cmdDiagnose(cfg, c)
+	case "mcp":
+		runErr = cmdMCP(cfg, c, args)
 	case "help":
 		printHelp()
 	default:
@@ -176,7 +193,7 @@ func knownCommand(cmd string) bool {
 	switch cmd {
 	case "info", "clients", "exec", "exec-async", "shell", "disks", "ls", "cat",
 		"write", "rm", "upload", "download", "deploy", "socks",
-		"listeners", "runners", "send", "compare", "diagnose", "help":
+		"listeners", "runners", "send", "compare", "diagnose", "mcp", "help":
 		return true
 	}
 	return false
@@ -1286,6 +1303,7 @@ func printHelp() {
   compare <url> [--method GET] [-H 'K: V'] [--body ...]
                                     direct/curl 对比发包
   diagnose                          诊断面板、curl
+  mcp [--print-config]              启动 MCP stdio 服务（--print-config 只打印配置）
 
 示例:
   vshell-cli
@@ -1295,11 +1313,13 @@ func printHelp() {
   vshell-cli ls 3 C:/
   vshell-cli cat 3 C:/scan.txt
   vshell-cli --json info
+  vshell-cli mcp
 
 说明:
   - 首次运行（不带命令）会在当前目录创建 config.ini，并显示命令列表。
   - 字段优先级：命令行参数 > 环境变量 > config.ini；密码留空时交互输入。
   - config.ini 中的密码为明文，建议 chmod 600，并避免提交到版本库。
+  - mcp 通过 stdio 提供 MCP 服务；配置片段输出到 stderr，避免污染协议流。
   - 每次执行都会重新登录，JWT 只在本次进程内存中。
   - Agent 掉线时只报告错误，不会自动切换 ID 执行。
 `, version)
